@@ -7,6 +7,7 @@ import android.provider.Telephony;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -33,19 +34,34 @@ public class SmsListener extends BroadcastReceiver {
     String messageBody = null;  // Holds the body of the SMS message.
     String sender = null;       // Holds the sender's phone number.
 
+    //private  static TextView smsView;
+
+    public static void setSmsView(TextView smsView) {
+  //      SmsListener.smsView = smsView;
+    }
+
     /**
      * This method is called when the BroadcastReceiver is receiving an Intent broadcast. In this case,
      * the action we are listening for is when an SMS is received.
      * @param context  The Context in which the receiver is running.
      * @param intent   The Intent being received.
      */
+
+
+
+    public SmsListener(){
+
+        Log.e("l", "r");
+
+    }
     @Override
     public void onReceive(Context context, Intent intent) {
+     //   smsView.setText("dupa");
         try
         {
-            Intent intent2 = new Intent(context, MainActivity.class);
-            intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent2.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      //      Intent intent2 = new Intent(context, MainActivity.class);
+        //    intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+          //  intent2.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
            // Toast.makeText(context, "Wiadomosc:" + messageBody, Toast.LENGTH_LONG).show();
             // If the intent received is a SMS received action.
             if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(intent.getAction()))
@@ -65,18 +81,28 @@ public class SmsListener extends BroadcastReceiver {
                 //    Toast t = Toast.makeText(context, "Received from: " + sender + " Message: " + messageBody, d);
                   //  t.show();
                     if(messageBody.equals("gdzie")) {
-                        intent2.putExtra("sendTo", sender);
-                        intent2.putExtra("alarm", true);
-                        context.startActivity(intent2);
-                        intent2.putExtra("sendTo", sender);
-                        intent2.putExtra("alarm", true);
-                        context.startActivity(intent2);
+                        GpsTracker gpsTracker = new GpsTracker(context);
+                        if(gpsTracker.canGetLocation()){
+                            double latitude = gpsTracker.getLatitude();
+                            double longitude = gpsTracker.getLongitude();
+                            if(sender != null) {
+                                SmsManager.getDefault().sendTextMessage(sender, null, "https://maps.google.pl/maps?q=" + latitude + "," + longitude, null, null);
+                            }
+                        }
+    //                    smsView.setText(sender);
+            //            intent2.putExtra("sendTo", sender);
+              //          intent2.putExtra("alarm", true);
+                  //      context.startActivity(intent2);
+                //        intent2.putExtra("sendTo", sender);
+                    //    intent2.putExtra("alarm", true);
+                    //    context.startActivity(intent2);
                     }
                 }
             }
         }
         catch (Exception e)
         {
+          //  smsView.setText(e.getMessage());
           //  Toast.makeText(context, "Blad:" + e.getMessage(), Toast.LENGTH_LONG).show();
           //  Log.e("SMSListener", "SMS Listener Exception " + e);
         }

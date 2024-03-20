@@ -7,11 +7,14 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
         tools:ignore="CoarseFineLocation" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
@@ -27,8 +30,7 @@
             android:name=".SmsListener"
             android:enabled="true"
             android:exported="true"
-            android:permission="android.permission.RECEIVE_SMS"
-            >
+            android:permission="android.permission.BROADCAST_SMS">
             <intent-filter  android:priority="1000"  >
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>

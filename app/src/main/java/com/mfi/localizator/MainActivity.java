@@ -39,10 +39,12 @@ import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.ACCESS_BACKGROUND_LOCATION;
 import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.READ_SMS;
 import static android.Manifest.permission.SEND_SMS;
 import static android.Manifest.permission.BROADCAST_SMS;
+import static android.Manifest.permission.RECEIVE_SMS;
 
 public class MainActivity extends AppCompatActivity {
     private static final int READ_SMS_PERMISSION_CODE = 1;
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     private final static int ALL_PERMISSIONS_RESULT = 101;
 
     private SmsListener smsListener;
+
+    private TextView sms;
     @Override
     public void onStart() {
         super.onStart();
@@ -76,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         permissions.add(READ_SMS);
         permissions.add(SEND_SMS);
         permissions.add(BROADCAST_SMS);
+        permissions.add(RECEIVE_SMS);
+        permissions.add(ACCESS_BACKGROUND_LOCATION);
         setSupportActionBar(binding.toolbar);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -98,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, smsList);
         listView.setAdapter(adapter);
+
+
+        sms =  findViewById(R.id.sms);
 
         tvLatitude = (TextView)findViewById(R.id.latitude);
         tvLongitude = (TextView)findViewById(R.id.longitude);
@@ -122,12 +131,13 @@ public class MainActivity extends AppCompatActivity {
         } else {
             readSms();
         }*/
-       // smsListener = new SmsListener();
-      //  IntentFilter intentFilter = new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
+        //SmsListener.setSmsView(sms);
+        //smsListener = new SmsListener();
+        //IntentFilter intentFilter = new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
         //intentFilter.setPriority(Integer.MAX_VALUE);
-      //  boolean listenToBroadcastsFromOtherApps = false;
+        boolean listenToBroadcastsFromOtherApps = false;
 
-      //  registerReceiver(smsListener, intentFilter, RECEIVER_EXPORTED);
+    //    registerReceiver(smsListener, intentFilter, RECEIVER_EXPORTED);
     }
 
     @Override
@@ -170,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             tvLatitude.setText(String.valueOf(latitude));
             tvLongitude.setText(String.valueOf(longitude));
             if(sendTo != null) {
-                SmsManager.getDefault().sendTextMessage(sendTo, null, "https://www.google.pl/maps/@" + String.valueOf(latitude) + "," + longitude, null, null);
+                SmsManager.getDefault().sendTextMessage(sendTo, null, "https://maps.google.pl/maps?q=" + latitude + "," + longitude, null, null);
             }
         }else{
             gpsTracker.showSettingsAlert();
